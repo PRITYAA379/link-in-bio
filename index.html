@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Link in Bio - 3D Strip</title>
+  <title>TriptoWorld 3D Earth Room</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
   <style>
     * {
@@ -17,34 +17,21 @@
       height: 100%;
       background: black;
       font-family: 'Bebas Neue', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       overflow: hidden;
-      perspective: 1000px;
-    }
-
-    .content {
-      width: 1000px;
-      height: 562px;
-      border-radius: 40px;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     .strip {
       width: 100%;
-      height: 80px;
+      height: 60px;
+      position: fixed;
+      top: 0;
       background: rgba(128, 0, 128, 0.4);
       box-shadow: 0 0 10px #d580ff, 0 0 20px #d580ff;
       overflow: hidden;
-      transform-style: preserve-3d;
-      transform: rotateX(10deg);
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 10;
     }
 
     .scrolling-text {
@@ -54,7 +41,7 @@
 
     .scrolling-text span {
       color: #d580ff;
-      font-size: 2.5em;
+      font-size: 1.8em;
       white-space: nowrap;
       text-shadow: 0 0 10px #d580ff, 0 0 20px #d580ff;
       margin-right: 100px;
@@ -62,23 +49,61 @@
 
     @keyframes scroll {
       0% {
-        transform: translateX(0) rotateY(0deg);
+        transform: translateX(0);
       }
       100% {
-        transform: translateX(-50%) rotateY(-30deg);
+        transform: translateX(-50%);
       }
+    }
+
+    #scene-container {
+      width: 100%;
+      height: 100%;
     }
   </style>
 </head>
 <body>
-  <div class="content">
-    <div class="strip">
-      <div class="scrolling-text">
-        <span>triptoworld — understand machine language and human life with us —</span>
-        <span>triptoworld — understand machine language and human life with us —</span>
-        <span>triptoworld — understand machine language and human life with us —</span>
-      </div>
+  <div class="strip">
+    <div class="scrolling-text">
+      <span>triptoworld — understand machine language and human life with us —</span>
+      <span>triptoworld — understand machine language and human life with us —</span>
     </div>
   </div>
+
+  <div id="scene-container"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color("#000000");
+
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+    camera.position.z = 2;
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('scene-container').appendChild(renderer.domElement);
+
+    const geometry = new THREE.SphereGeometry(0.8, 32, 32);
+    const texture = new THREE.TextureLoader().load('https://raw.githubusercontent.com/ajayns/three-earth-example/master/assets/earthmap1k.jpg');
+    const material = new THREE.MeshBasicMaterial({ map: texture });
+    const earth = new THREE.Mesh(geometry, material);
+    scene.add(earth);
+
+    function animate() {
+      requestAnimationFrame(animate);
+      earth.rotation.y += 0.002;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('wheel', function(e) {
+      if (e.deltaY < 0) {
+        camera.position.z -= 0.5;
+      } else {
+        camera.position.z += 0.5;
+      }
+    });
+  </script>
 </body>
 </html>
