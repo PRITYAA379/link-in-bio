@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TriptoWorld 3D Earth Room</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
   <style>
@@ -48,12 +48,8 @@
     }
 
     @keyframes scroll {
-      0% {
-        transform: translateX(0%);
-      }
-      100% {
-        transform: translateX(-100%);
-      }
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
     }
 
     .hamburger {
@@ -137,6 +133,22 @@
       margin: 0 auto;
     }
 
+    .falling span {
+      display: inline-block;
+      animation: fall 1s forwards ease-in;
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(300px) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
     @media (min-width: 768px) {
       .strip {
         height: 60px;
@@ -153,51 +165,72 @@
   </style>
 </head>
 <body>
-  <div class="strip">
-    <div class="scrolling-text">
-      <span>triptoworld — understand machine language and human behaviours with us —</span>
+  <div class="strip" id="strip">
+    <div class="scrolling-text" id="scrolling-text">
+      <span id="stripText">triptoworld — understand machine language and human behaviours with us —</span>
     </div>
   </div>
 
-  <!-- Hamburger Menu -->
+  <!-- Hamburger -->
   <div class="hamburger" onclick="toggleMenu()">
-    <div></div>
-    <div></div>
-    <div></div>
+    <div></div><div></div><div></div>
   </div>
 
-  <!-- Fullscreen Menu -->
+  <!-- Menu -->
   <div class="menu" id="menu">
-    <a href="https://www.youtube.com/channel/UCPlaPhIc656wuCWJf2Ws9VQ" target="_blank" rel="noopener noreferrer">YouTube</a>
-    <a href="https://gumroad.com" target="_blank" rel="noopener noreferrer">Gumroad</a>
-    <a href="https://yourportfolio.com" target="_blank" rel="noopener noreferrer">Portfolio</a>
-    <a href="https://yourwebsite.com" target="_blank" rel="noopener noreferrer">Website</a>
+    <a href="https://www.youtube.com/channel/UCPlaPhIc656wuCWJf2Ws9VQ" target="_blank">YouTube</a>
+    <a href="https://gumroad.com" target="_blank">Gumroad</a>
+    <a href="https://yourportfolio.com" target="_blank">Portfolio</a>
+    <a href="https://yourwebsite.com" target="_blank">Website</a>
   </div>
 
-  <!-- Earth Container -->
   <div id="scene-container"></div>
 
-  <!-- New Dusky White Section -->
   <div class="white-section">
     <h1>Welcome to TriptoWorld</h1>
     <p>We dive deep into how machines learn and how humans behave. Explore knowledge, tools, and projects curated just for you.</p>
   </div>
 
+  <audio id="crashSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4f772c8b3d.mp3"></audio>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
     function toggleMenu() {
-      document.getElementById("menu").classList.toggle("show");
+      const menu = document.getElementById("menu");
+      const strip = document.getElementById("strip");
+      const text = document.getElementById("stripText");
+      const audio = document.getElementById("crashSound");
+
+      menu.classList.toggle("show");
+
+      if (menu.classList.contains("show")) {
+        // Break text into spans
+        const characters = text.textContent.split("").map(char => {
+          const span = document.createElement("span");
+          span.textContent = char;
+          return span;
+        });
+        text.innerHTML = "";
+        characters.forEach(span => {
+          text.appendChild(span);
+        });
+
+        text.classList.add("falling");
+        audio.play();
+
+        // Reset after animation
+        setTimeout(() => {
+          text.classList.remove("falling");
+          text.innerHTML = "triptoworld — understand machine language and human behaviours with us —";
+        }, 1500);
+      }
     }
 
+    // 3D Earth
     const scene = new THREE.Scene();
     scene.background = new THREE.Color("#000000");
 
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.z = 2;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -206,9 +239,7 @@
     document.getElementById("scene-container").appendChild(renderer.domElement);
 
     const geometry = new THREE.SphereGeometry(0.8, 32, 32);
-    const texture = new THREE.TextureLoader().load(
-      "https://raw.githubusercontent.com/ajayns/three-earth-example/master/assets/earthmap1k.jpg"
-    );
+    const texture = new THREE.TextureLoader().load("https://raw.githubusercontent.com/ajayns/three-earth-example/master/assets/earthmap1k.jpg");
     const material = new THREE.MeshBasicMaterial({ map: texture });
     const earth = new THREE.Mesh(geometry, material);
     scene.add(earth);
@@ -224,7 +255,6 @@
       const zoomSpeed = 0.3;
       const minZoom = 1;
       const maxZoom = 5;
-
       camera.position.z += e.deltaY > 0 ? zoomSpeed : -zoomSpeed;
       camera.position.z = Math.max(minZoom, Math.min(maxZoom, camera.position.z));
     });
