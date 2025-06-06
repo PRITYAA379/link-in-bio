@@ -15,9 +15,9 @@
     html, body {
       width: 100%;
       height: 100%;
-      background: black;
       font-family: 'Bebas Neue', sans-serif;
-      overflow: hidden;
+      background: black;
+      overflow-x: hidden;
     }
 
     .strip {
@@ -28,27 +28,23 @@
       background: rgba(128, 0, 128, 0.4);
       box-shadow: 0 0 10px #d580ff, 0 0 20px #d580ff;
       z-index: 10;
-      overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
     }
 
     .scrolling-text {
-      width: 100%;
-      height: 100%;
       display: flex;
-      align-items: center;
       animation: scroll 15s linear infinite;
     }
 
     .scrolling-text span {
-      display: inline-block;
-      padding-left: 100%;
       color: #d580ff;
       font-size: 1.2em;
       white-space: nowrap;
       text-shadow: 0 0 10px #d580ff, 0 0 20px #d580ff;
+      padding-right: 100%;
     }
 
     @keyframes scroll {
@@ -60,28 +56,6 @@
       }
     }
 
-    #scene-container {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      top: 50px;
-    }
-
-    @media (min-width: 768px) {
-      .strip {
-        height: 60px;
-      }
-
-      .scrolling-text span {
-        font-size: 1.8em;
-      }
-
-      #scene-container {
-        top: 60px;
-      }
-    }
-
-    /* Hamburger Styles */
     .hamburger {
       position: fixed;
       top: 10px;
@@ -115,6 +89,10 @@
       z-index: 19;
     }
 
+    .menu.show {
+      display: flex;
+    }
+
     .menu a {
       color: #d580ff;
       font-size: 2em;
@@ -128,8 +106,49 @@
       transform: scale(1.1);
     }
 
-    .menu.show {
-      display: flex;
+    #scene-container {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+      top: 50px;
+      z-index: 1;
+    }
+
+    .white-section {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      background-color: #f2f2f2;
+      color: #333;
+      padding: 100px 20px 50px;
+      z-index: 5;
+      text-align: center;
+    }
+
+    .white-section h1 {
+      font-size: 3em;
+      margin-bottom: 20px;
+      font-family: 'Bebas Neue', sans-serif;
+    }
+
+    .white-section p {
+      font-size: 1.2em;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+      .strip {
+        height: 60px;
+      }
+
+      .scrolling-text span {
+        font-size: 1.8em;
+      }
+
+      #scene-container {
+        top: 60px;
+      }
     }
   </style>
 </head>
@@ -140,22 +159,29 @@
     </div>
   </div>
 
-  <!-- Hamburger -->
+  <!-- Hamburger Menu -->
   <div class="hamburger" onclick="toggleMenu()">
     <div></div>
     <div></div>
     <div></div>
   </div>
 
-  <!-- Full-screen Menu -->
+  <!-- Fullscreen Menu -->
   <div class="menu" id="menu">
-    <a href="https://youtube.com" target="_blank">YouTube</a>
-    <a href="https://gumroad.com" target="_blank">Gumroad</a>
-    <a href="https://yourportfolio.com" target="_blank">Portfolio</a>
-    <a href="https://yourwebsite.com" target="_blank">Website</a>
+    <a href="https://www.youtube.com/channel/UCPlaPhIc656wuCWJf2Ws9VQ" target="_blank" rel="noopener noreferrer">YouTube</a>
+    <a href="https://gumroad.com" target="_blank" rel="noopener noreferrer">Gumroad</a>
+    <a href="https://yourportfolio.com" target="_blank" rel="noopener noreferrer">Portfolio</a>
+    <a href="https://yourwebsite.com" target="_blank" rel="noopener noreferrer">Website</a>
   </div>
 
+  <!-- Earth Container -->
   <div id="scene-container"></div>
+
+  <!-- New Dusky White Section -->
+  <div class="white-section">
+    <h1>Welcome to TriptoWorld</h1>
+    <p>We dive deep into how machines learn and how humans behave. Explore knowledge, tools, and projects curated just for you.</p>
+  </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script>
